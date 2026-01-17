@@ -171,8 +171,8 @@ function stringify(
   data?: Record<string, unknown>,
   options?: GrayMatterOptions,
 ): string {
-  if (typeof file === "string") file = matter(file, options);
-  return stringifyImpl(file, data, options);
+  const resolvedFile = typeof file === "string" ? matter(file, options) : file;
+  return stringifyImpl(resolvedFile, data, options);
 }
 
 export { matter, stringify, test, language, clearCache, cache };

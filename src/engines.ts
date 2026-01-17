@@ -5,11 +5,11 @@ import type { Engine, Engines, GrayMatterOptions } from "./types.ts";
  * YAML engine using @std/yaml
  */
 const yaml = {
-  parse: (str: string, _options?: GrayMatterOptions): Record<string, unknown> => {
+  parse: (str: string): Record<string, unknown> => {
     const result = yamlParse(str);
     return (result as Record<string, unknown>) ?? {};
   },
-  stringify: (data: Record<string, unknown>, _options?: GrayMatterOptions): string => {
+  stringify: (data: Record<string, unknown>): string => {
     return yamlStringify(data as Record<string, unknown>);
   },
 } as const satisfies Engine;
@@ -18,7 +18,7 @@ const yaml = {
  * JSON engine
  */
 const json = {
-  parse: (str: string, _options?: GrayMatterOptions): Record<string, unknown> => {
+  parse: (str: string): Record<string, unknown> => {
     return JSON.parse(str) as Record<string, unknown>;
   },
   stringify: (
@@ -53,7 +53,7 @@ function parseJavaScript(str: string, wrap: boolean): Record<string, unknown> {
  * JavaScript engine (uses eval)
  */
 const javascript = {
-  parse: (str: string, _options?: GrayMatterOptions): Record<string, unknown> => {
+  parse: (str: string): Record<string, unknown> => {
     return parseJavaScript(str, true);
   },
   stringify: (): never => {

@@ -1,4 +1,5 @@
-import { Buffer } from "node:buffer";
+const textEncoder = new TextEncoder();
+const textDecoder = new TextDecoder();
 
 /**
  * Strip BOM (Byte Order Mark) from a string
@@ -8,33 +9,35 @@ function stripBom(str: string): string {
 }
 
 /**
- * Returns true if `val` is a Buffer
+ * Returns true if `val` is a Uint8Array
  */
-function isBuffer(val: unknown): val is Buffer {
-  return Buffer.isBuffer(val);
+function isUint8Array(val: unknown): val is Uint8Array {
+  return val instanceof Uint8Array;
 }
 
 /**
- * Returns true if `val` is a plain object (not a Buffer or other special object)
+ * Returns true if `val` is a plain object (not a Uint8Array or other special object)
  */
 export function isObject(val: unknown): val is Record<string, unknown> {
-  return typeof val === "object" && val !== null && !Array.isArray(val) && !Buffer.isBuffer(val);
+  return (
+    typeof val === "object" && val !== null && !Array.isArray(val) && !(val instanceof Uint8Array)
+  );
 }
 
 /**
- * Cast `input` to a Buffer
+ * Cast `input` to a Uint8Array
  */
-export function toBuffer(input: string | Buffer): Buffer {
-  return typeof input === "string" ? Buffer.from(input) : input;
+export function toUint8Array(input: string | Uint8Array): Uint8Array {
+  return typeof input === "string" ? textEncoder.encode(input) : input;
 }
 
 /**
  * Cast `input` to a string, stripping BOM
  */
-export function toString(input: string | Buffer): string {
-  if (isBuffer(input)) return stripBom(String(input));
+export function toString(input: string | Uint8Array): string {
+  if (isUint8Array(input)) return stripBom(textDecoder.decode(input));
   if (typeof input !== "string") {
-    throw new TypeError("expected input to be a string or buffer");
+    throw new TypeError("expected input to be a string or Uint8Array");
   }
   return stripBom(input);
 }
@@ -111,13 +114,13 @@ if (import.meta.vitest) {
       });
     });
 
-    describe("isBuffer", () => {
-      it("should return true for Buffer", () => {
-        expect(isBuffer(Buffer.from("test"))).toBe(true);
+    describe("isUint8Array", () => {
+      it("should return true for Uint8Array", () => {
+        expect(isUint8Array(new Uint8Array([1, 2, 3]))).toBe(true);
       });
 
       it("should return false for string", () => {
-        expect(isBuffer("test")).toBe(false);
+        expect(isUint8Array("test")).toBe(false);
       });
     });
 
@@ -135,8 +138,8 @@ if (import.meta.vitest) {
         expect(isObject(null)).toBe(false);
       });
 
-      it("should return false for Buffer", () => {
-        expect(isObject(Buffer.from("test"))).toBe(false);
+      it("should return false for Uint8Array", () => {
+        expect(isObject(new Uint8Array([1, 2, 3]))).toBe(false);
       });
     });
 

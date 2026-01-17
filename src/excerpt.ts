@@ -36,13 +36,12 @@ export function excerpt(file: GrayMatterFile, options?: GrayMatterOptions): Gray
 
 if (import.meta.vitest) {
   const { fc, test } = await import("@fast-check/vitest");
-  const { Buffer } = await import("node:buffer");
 
   const makeFile = (content: string, data: Record<string, unknown> = {}): GrayMatterFile => ({
     content,
     data,
     excerpt: "",
-    orig: Buffer.from(content),
+    orig: new TextEncoder().encode(content),
     language: "yaml",
     matter: "",
     isEmpty: false,

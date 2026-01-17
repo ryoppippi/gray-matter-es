@@ -1,12 +1,12 @@
 import type { GrayMatterFile, GrayMatterInput, GrayMatterOptions } from "./types.ts";
-import { getStringProp, isObject, toBuffer, toString } from "./utils.ts";
+import { getStringProp, isObject, toUint8Array, toString } from "./utils.ts";
 import { stringify } from "./stringify.ts";
 
 /**
  * Internal input shape after normalization
  */
 interface NormalizedInput {
-  content: string | Buffer;
+  content: string | Uint8Array;
   data?: unknown;
   language?: string;
   matter?: string;
@@ -24,7 +24,7 @@ function normalizeInput(input: GrayMatterInput): NormalizedInput {
       matter: getStringProp(input, "matter"),
     };
   }
-  // string or Buffer
+  // string or Uint8Array
   return { content: input };
 }
 
@@ -38,7 +38,7 @@ export function toFile(input: GrayMatterInput): GrayMatterFile {
   const content = toString(normalized.content ?? "");
   const language = normalized.language ?? "";
   const matter = normalized.matter ?? "";
-  const orig = toBuffer(normalized.content ?? "");
+  const orig = toUint8Array(normalized.content ?? "");
 
   const file: GrayMatterFile = {
     data,
@@ -65,7 +65,6 @@ export function toFile(input: GrayMatterInput): GrayMatterFile {
 
 if (import.meta.vitest) {
   const { fc, test } = await import("@fast-check/vitest");
-  const { Buffer } = await import("node:buffer");
 
   describe("toFile", () => {
     it("should convert string to file object", () => {
@@ -78,8 +77,8 @@ if (import.meta.vitest) {
       expect(result.matter).toBe("");
     });
 
-    it("should convert Buffer to file object", () => {
-      const result = toFile(Buffer.from("buffer content"));
+    it("should convert Uint8Array to file object", () => {
+      const result = toFile(new TextEncoder().encode("buffer content"));
       expect(result.content).toBe("buffer content");
       expect(result.data).toEqual({});
     });
@@ -90,15 +89,15 @@ if (import.meta.vitest) {
       expect(result.data).toEqual({ key: "value" });
     });
 
-    it("should preserve orig as Buffer", () => {
+    it("should preserve orig as Uint8Array", () => {
       const result = toFile("test");
-      expect(Buffer.isBuffer(result.orig)).toBe(true);
-      expect(result.orig.toString()).toBe("test");
+      expect(result.orig).toBeInstanceOf(Uint8Array);
+      expect(new TextDecoder().decode(result.orig)).toBe("test");
     });
 
     it("should set stringify as a function", () => {
       const result = toFile("content");
-      expect(typeof result.stringify).toBe("function");
+      expect(result.stringify).toBeTypeOf("function");
     });
 
     it("should initialize data to empty object if not provided", () => {
@@ -126,25 +125,24 @@ if (import.meta.vitest) {
       "should always return valid file object for any string",
       (input) => {
         const result = toFile(input);
-        expect(typeof result.content).toBe("string");
-        expect(typeof result.data).toBe("object");
+        expect(result.content).toBeTypeOf("string");
+        expect(result.data).toBeTypeOf("object");
         expect(result.data).not.toBeNull();
-        expect(typeof result.isEmpty).toBe("boolean");
-        expect(typeof result.excerpt).toBe("string");
-        expect(typeof result.language).toBe("string");
-        expect(typeof result.matter).toBe("string");
-        expect(Buffer.isBuffer(result.orig)).toBe(true);
-        expect(typeof result.stringify).toBe("function");
+        expect(result.isEmpty).toBeTypeOf("boolean");
+        expect(result.excerpt).toBeTypeOf("string");
+        expect(result.language).toBeTypeOf("string");
+        expect(result.matter).toBeTypeOf("string");
+        expect(result.orig).toBeInstanceOf(Uint8Array);
+        expect(result.stringify).toBeTypeOf("function");
       },
     );
 
     test.prop([fc.uint8Array({ minLength: 0, maxLength: 200 })])(
-      "should handle any Buffer input",
+      "should handle any Uint8Array input",
       (arr) => {
-        const buffer = Buffer.from(arr);
-        const result = toFile(buffer);
-        expect(typeof result.content).toBe("string");
-        expect(Buffer.isBuffer(result.orig)).toBe(true);
+        const result = toFile(arr);
+        expect(result.content).toBeTypeOf("string");
+        expect(result.orig).toBeInstanceOf(Uint8Array);
       },
     );
 
@@ -159,7 +157,7 @@ if (import.meta.vitest) {
       const input = data !== undefined ? { content, data } : { content };
       const result = toFile(input);
       expect(result.content).toBe(content);
-      expect(typeof result.data).toBe("object");
+      expect(result.data).toBeTypeOf("object");
       if (data !== undefined) {
         expect(result.data).toEqual(data);
       }

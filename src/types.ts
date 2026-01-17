@@ -45,8 +45,8 @@ export interface GrayMatterFile {
   content: string;
   /** The extracted excerpt (if enabled) */
   excerpt: string;
-  /** The original input as a Buffer */
-  orig: Buffer;
+  /** The original input as a Uint8Array */
+  orig: Uint8Array;
   /** The detected/specified language */
   language: string;
   /** The raw front matter string (without delimiters) */
@@ -55,8 +55,6 @@ export interface GrayMatterFile {
   isEmpty: boolean;
   /** The original content if isEmpty is true */
   empty?: string;
-  /** File path (set by matter.read) */
-  path?: string;
   /** Stringify the file back to a string */
   stringify: (data?: Record<string, unknown>, options?: GrayMatterOptions) => string;
 }
@@ -64,7 +62,10 @@ export interface GrayMatterFile {
 /**
  * Input that can be passed to gray-matter
  */
-export type GrayMatterInput = string | Buffer | { content: string; data?: Record<string, unknown> };
+export type GrayMatterInput =
+  | string
+  | Uint8Array
+  | { content: string; data?: Record<string, unknown> };
 
 /**
  * The matter function interface with static methods
@@ -76,7 +77,6 @@ export interface MatterFunction {
     data?: Record<string, unknown>,
     options?: GrayMatterOptions,
   ) => string;
-  read: (filepath: string, options?: GrayMatterOptions) => GrayMatterFile;
   test: (str: string, options?: GrayMatterOptions) => boolean;
   language: (str: string, options?: GrayMatterOptions) => { raw: string; name: string };
   clearCache: () => void;

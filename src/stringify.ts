@@ -79,7 +79,7 @@ if (import.meta.vitest) {
         content: "hello world",
         data: { title: "Test" },
         excerpt: "",
-        orig: Buffer.from(""),
+        orig: new Uint8Array(),
         language: "yaml",
         matter: "",
         isEmpty: false,
@@ -104,7 +104,7 @@ if (import.meta.vitest) {
         content: "no newline",
         data: { key: "value" },
         excerpt: "",
-        orig: Buffer.from(""),
+        orig: new Uint8Array(),
         language: "yaml",
         matter: "",
         isEmpty: false,
@@ -119,7 +119,7 @@ if (import.meta.vitest) {
         content: "content only",
         data: {},
         excerpt: "",
-        orig: Buffer.from(""),
+        orig: new Uint8Array(),
         language: "yaml",
         matter: "",
         isEmpty: false,
@@ -134,7 +134,7 @@ if (import.meta.vitest) {
         content: "main content",
         data: { title: "Test" },
         excerpt: "This is excerpt",
-        orig: Buffer.from(""),
+        orig: new Uint8Array(),
         language: "yaml",
         matter: "",
         isEmpty: false,
@@ -155,7 +155,7 @@ if (import.meta.vitest) {
         content: "test content",
         data,
         excerpt: "",
-        orig: Buffer.from(""),
+        orig: new Uint8Array(),
         language: "yaml",
         matter: "",
         isEmpty: false,
@@ -172,14 +172,14 @@ if (import.meta.vitest) {
           content,
           data: { key: "value" },
           excerpt: "",
-          orig: Buffer.from(""),
+          orig: new Uint8Array(),
           language: "yaml",
           matter: "",
           isEmpty: false,
           stringify: () => "",
         };
         const result = stringify(file);
-        expect(typeof result).toBe("string");
+        expect(result).toBeTypeOf("string");
         expect(result.endsWith("\n")).toBe(true);
       },
     );

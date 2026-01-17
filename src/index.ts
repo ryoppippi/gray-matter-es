@@ -1,4 +1,3 @@
-import { readFileSync } from "node:fs";
 import { defaults } from "./defaults.ts";
 import { toBuiltinLanguage } from "./engines.ts";
 import { excerpt } from "./excerpt.ts";
@@ -180,16 +179,6 @@ const matter: MatterFunction = Object.assign(matterImpl, {
   },
 
   /**
-   * Synchronously read a file from the file system and parse front matter.
-   */
-  read: (filepath: string, options?: GrayMatterOptions): GrayMatterFile => {
-    const str = readFileSync(filepath, "utf8");
-    const file = matterImpl(str, options);
-    file.path = filepath;
-    return file;
-  },
-
-  /**
    * Returns true if the given string has front matter.
    */
   test: matterTest,
@@ -218,7 +207,6 @@ export default matter;
 
 if (import.meta.vitest) {
   const { fc, test } = await import("@fast-check/vitest");
-  const { Buffer } = await import("node:buffer");
 
   describe("matter", () => {
     beforeEach(() => {
@@ -356,16 +344,16 @@ if (import.meta.vitest) {
     const yamlSafeObject = fc.dictionary(yamlKey, yamlSafeValue, { minKeys: 1, maxKeys: 5 });
 
     test.prop([fc.string({ minLength: 1, maxLength: 100 })])(
-      "Buffer and string input should produce equivalent results",
+      "Uint8Array and string input should produce equivalent results",
       (content) => {
         matter.clearCache();
         const fromString = matter(content);
         matter.clearCache();
-        const fromBuffer = matter(Buffer.from(content));
+        const fromUint8Array = matter(new TextEncoder().encode(content));
 
-        expect(fromString.content).toBe(fromBuffer.content);
-        expect(fromString.data).toEqual(fromBuffer.data);
-        expect(fromString.excerpt).toBe(fromBuffer.excerpt);
+        expect(fromString.content).toBe(fromUint8Array.content);
+        expect(fromString.data).toEqual(fromUint8Array.data);
+        expect(fromString.excerpt).toBe(fromUint8Array.excerpt);
       },
     );
 

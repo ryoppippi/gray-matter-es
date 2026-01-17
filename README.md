@@ -8,6 +8,7 @@ ESM-only [gray-matter](https://github.com/jonschlinkert/gray-matter) implementat
 ## Features
 
 - 🚀 ESM-only, no CommonJS
+- 🌐 Browser-compatible (no Node.js dependencies)
 - 📦 Zero runtime dependencies (YAML parser bundled from [@std/yaml](https://jsr.io/@std/yaml))
 - 🔷 Full TypeScript support with strict types
 - ✅ API compatible with gray-matter
@@ -38,9 +39,6 @@ const str = matter.stringify("content", { title: "Hello" });
 // title: Hello
 // ---
 // content
-
-// Read from file (Node.js)
-const fileFromDisk = matter.read("./post.md");
 
 // Test if string has front matter
 matter.test("---\ntitle: Hello\n---"); // true
@@ -78,11 +76,11 @@ console.log(file.excerpt); // 'excerpt\n'
 
 ### `matter(input, options?)`
 
-Parse front matter from a string or buffer.
+Parse front matter from a string or Uint8Array.
 
 **Parameters:**
 
-- `input` - String, Buffer, or object with `content` property
+- `input` - String, Uint8Array, or object with `content` property
 - `options` - Optional configuration
 
 **Returns:** `GrayMatterFile` object with:
@@ -90,7 +88,7 @@ Parse front matter from a string or buffer.
 - `data` - Parsed front matter data
 - `content` - Content after front matter
 - `excerpt` - Extracted excerpt (if enabled)
-- `orig` - Original input as Buffer
+- `orig` - Original input as Uint8Array
 - `language` - Detected/specified language
 - `matter` - Raw front matter string
 - `isEmpty` - True if front matter block was empty
@@ -99,10 +97,6 @@ Parse front matter from a string or buffer.
 ### `matter.stringify(file, data?, options?)`
 
 Stringify data to front matter and append content.
-
-### `matter.read(filepath, options?)`
-
-Synchronously read and parse a file.
 
 ### `matter.test(str, options?)`
 
@@ -123,7 +117,9 @@ Detect the language specified after the opening delimiter.
 ## Differences from gray-matter
 
 - ESM-only (no CommonJS support)
+- Browser-compatible (no Node.js dependencies)
 - Uses [`@std/yaml`](https://jsr.io/@std/yaml) instead of `js-yaml`
+- Removed `matter.read()` (use your own file reading)
 - Removed JavaScript front matter engine (security: avoids `eval`)
 - Removed deprecated options (`lang`, `delims`, `parsers`)
 - Removed `section-matter` support

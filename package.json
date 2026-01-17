@@ -23,7 +23,6 @@
     "src"
   ],
   "type": "module",
-  "main": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "exports": {
     ".": "./src/index.ts",
@@ -31,16 +30,14 @@
   },
   "publishConfig": {
     "exports": {
-      ".": {
-        "types": "./dist/index.d.mts",
-        "import": "./dist/index.mjs"
-      },
+      ".": "./dist/index.mjs",
       "./package.json": "./package.json"
     }
   },
   "scripts": {
     "build": "tsdown",
     "test": "vitest",
+    "typecheck": "tsgo --noEmit",
     "lint": "pnpm --aggregate-output run '/^lint:/'",
     "lint:oxlint": "oxlint --max-warnings=0",
     "lint:oxfmt": "oxfmt --no-error-on-unmatched-pattern --check .",
@@ -51,10 +48,13 @@
     "release": "bumpp"
   },
   "devDependencies": {
+    "@std/yaml": "catalog:jsr",
+    "@types/node": "catalog:dev",
     "bumpp": "catalog:release",
     "changelogithub": "catalog:release",
-    "pkg-pr-new": "catalog:release",
+    "publint": "catalog:dev",
     "tsdown": "catalog:dev",
+    "unplugin-unused": "catalog:dev",
     "vitest": "catalog:dev"
   },
   "packageManager": "pnpm@10.28.0"

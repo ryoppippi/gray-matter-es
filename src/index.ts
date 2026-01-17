@@ -213,6 +213,7 @@ const matter: MatterFunction = Object.assign(matterImpl, {
   cache,
 });
 
+export { matter };
 export default matter;
 
 if (import.meta.vitest) {

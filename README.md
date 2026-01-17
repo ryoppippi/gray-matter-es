@@ -21,6 +21,8 @@ pnpm add gray-matter-es
 
 ```typescript
 import matter from "gray-matter-es";
+// or
+import { matter } from "gray-matter-es";
 
 // Parse front matter
 const file = matter("---\ntitle: Hello\n---\nThis is content");
@@ -131,6 +133,8 @@ Detect the language specified after the opening delimiter.
 ```diff
 - const matter = require('gray-matter');
 + import matter from 'gray-matter-es';
++ // or
++ import { matter } from 'gray-matter-es';
 ```
 
 ### Removed Features

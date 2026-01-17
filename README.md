@@ -1,5 +1,8 @@
 # gray-matter-es
 
+[![npm version](https://img.shields.io/npm/v/gray-matter-es?color=yellow)](https://npmjs.com/package/gray-matter-es)
+[![npm downloads](https://img.shields.io/npm/dm/gray-matter-es?color=yellow)](https://npmjs.com/package/gray-matter-es)
+
 ESM-only [gray-matter](https://github.com/jonschlinkert/gray-matter) implementation.
 
 ## Features

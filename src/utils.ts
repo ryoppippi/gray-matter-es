@@ -27,10 +27,10 @@ function isBuffer(val: unknown): val is Buffer {
 }
 
 /**
- * Returns true if `val` is a plain object
+ * Returns true if `val` is a plain object (not a Buffer or other special object)
  */
 export function isObject(val: unknown): val is Record<string, unknown> {
-  return typeof val === "object" && val !== null && !Array.isArray(val);
+  return typeof val === "object" && val !== null && !Array.isArray(val) && !Buffer.isBuffer(val);
 }
 
 /**
@@ -100,6 +100,10 @@ if (import.meta.vitest) {
 
       it("should return false for null", () => {
         expect(isObject(null)).toBe(false);
+      });
+
+      it("should return false for Buffer", () => {
+        expect(isObject(Buffer.from("test"))).toBe(false);
       });
     });
 

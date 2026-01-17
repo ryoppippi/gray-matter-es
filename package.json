@@ -50,6 +50,7 @@
     "release": "bumpp"
   },
   "devDependencies": {
+    "@fast-check/vitest": "catalog:dev",
     "@std/yaml": "catalog:jsr",
     "@types/node": "catalog:dev",
     "bumpp": "catalog:release",

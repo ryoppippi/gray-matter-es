@@ -26,8 +26,9 @@ export type {
 
 /**
  * Cache for parsed results
+ * Using Object.create(null) to avoid prototype pollution
  */
-const cache: Record<string, GrayMatterFile> = {};
+const cache: Record<string, GrayMatterFile> = Object.create(null);
 
 /**
  * Takes a string or object with `content` property, extracts
@@ -247,6 +248,8 @@ const matter: MatterFunction = Object.assign(matterImpl, {
 export default matter;
 
 if (import.meta.vitest) {
+  const { fc, test } = await import("@fast-check/vitest");
+
   describe("matter", () => {
     beforeEach(() => {
       matter.clearCache();
@@ -360,5 +363,150 @@ if (import.meta.vitest) {
       const result = matter.language("---\nabc: xyz\n---");
       expect(result.name).toBe("");
     });
+  });
+
+  describe("property-based tests", () => {
+    beforeEach(() => {
+      matter.clearCache();
+    });
+
+    /** Arbitrary for YAML-safe keys */
+    const yamlKey = fc
+      .string({ minLength: 1, maxLength: 20 })
+      .filter((s) => /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(s));
+
+    /** Arbitrary for YAML-safe values */
+    const yamlSafeValue = fc.oneof(
+      fc.string({ maxLength: 50 }),
+      fc.integer({ min: -10000, max: 10000 }),
+      fc.boolean(),
+    );
+
+    /** Arbitrary for simple YAML-compatible objects */
+    const yamlSafeObject = fc.dictionary(yamlKey, yamlSafeValue, { minKeys: 1, maxKeys: 5 });
+
+    test.prop([fc.string({ minLength: 1, maxLength: 100 })])(
+      "Buffer and string input should produce equivalent results",
+      (content) => {
+        matter.clearCache();
+        const fromString = matter(content);
+        matter.clearCache();
+        const fromBuffer = matter(Buffer.from(content));
+
+        expect(fromString.content).toBe(fromBuffer.content);
+        expect(fromString.data).toEqual(fromBuffer.data);
+        expect(fromString.excerpt).toBe(fromBuffer.excerpt);
+      },
+    );
+
+    test.prop([yamlSafeObject, fc.string({ minLength: 0, maxLength: 50 })])(
+      "parse then stringify should preserve data",
+      (data, content) => {
+        const frontMatter = Object.entries(data)
+          .map(([k, v]) => `${k}: ${typeof v === "string" ? JSON.stringify(v) : v}`)
+          .join("\n");
+        const input = `---\n${frontMatter}\n---\n${content}`;
+
+        matter.clearCache();
+        const parsed = matter(input);
+        const stringified = matter.stringify(parsed);
+        matter.clearCache();
+        const reparsed = matter(stringified);
+
+        expect(reparsed.data).toEqual(parsed.data);
+      },
+    );
+
+    test.prop([fc.string({ minLength: 0, maxLength: 100 })])(
+      "content without front matter should be preserved",
+      (content) => {
+        const safeContent = content.replace(/^---/gm, "___");
+        matter.clearCache();
+        const result = matter(safeContent);
+
+        expect(result.content).toBe(safeContent);
+        expect(result.data).toEqual({});
+      },
+    );
+
+    test.prop([
+      yamlSafeObject,
+      fc.string({ minLength: 0, maxLength: 50 }),
+      fc.string({ minLength: 1, maxLength: 50 }),
+    ])("matter.test should correctly detect front matter", (data, content, noFrontMatter) => {
+      const frontMatter = Object.entries(data)
+        .map(([k, v]) => `${k}: ${typeof v === "string" ? JSON.stringify(v) : v}`)
+        .join("\n");
+      const withFrontMatter = `---\n${frontMatter}\n---\n${content}`;
+      const withoutFrontMatter = noFrontMatter.replace(/^---/gm, "___");
+
+      expect(matter.test(withFrontMatter)).toBe(true);
+      expect(matter.test(withoutFrontMatter)).toBe(withoutFrontMatter.startsWith("---"));
+    });
+
+    test.prop([fc.constantFrom("yaml", "json"), yamlSafeObject, fc.string({ maxLength: 30 })])(
+      "should handle different languages",
+      (language, data, content) => {
+        let frontMatterContent: string;
+        if (language === "json") {
+          frontMatterContent = JSON.stringify(data);
+        } else {
+          frontMatterContent = Object.entries(data)
+            .map(([k, v]) => `${k}: ${typeof v === "string" ? JSON.stringify(v) : v}`)
+            .join("\n");
+        }
+
+        const input = `---${language}\n${frontMatterContent}\n---\n${content}`;
+        matter.clearCache();
+        const result = matter(input);
+
+        expect(result.language).toBe(language);
+        expect(result.data).toEqual(data);
+      },
+    );
+
+    test.prop([fc.constantFrom("---", "~~~", "***", "+++")])(
+      "should handle custom delimiters",
+      (delimiter) => {
+        const input = `${delimiter}\ntitle: Test\n${delimiter}\ncontent`;
+        matter.clearCache();
+        const result = matter(input, { delimiters: delimiter });
+
+        expect(result.data).toEqual({ title: "Test" });
+        expect(result.content).toBe("content");
+      },
+    );
+
+    test.prop([
+      fc.string({ minLength: 1, maxLength: 20 }),
+      fc.string({ minLength: 1, maxLength: 20 }),
+    ])("should extract excerpt with custom separator", (excerptText, contentText) => {
+      const separator = "<!-- more -->";
+      const safeExcerpt = excerptText.replace(separator, "");
+      const safeContent = contentText.replace(separator, "");
+      const input = `---\ntitle: Test\n---\n${safeExcerpt}\n${separator}\n${safeContent}`;
+
+      matter.clearCache();
+      const result = matter(input, { excerpt: true, excerpt_separator: separator });
+
+      expect(result.excerpt).toBe(`${safeExcerpt}\n`);
+    });
+
+    test.prop([fc.string({ minLength: 0, maxLength: 50 })])(
+      "should handle CRLF and LF consistently",
+      (content) => {
+        const yamlData = "title: Test";
+        const inputLF = `---\n${yamlData}\n---\n${content}`;
+        const inputCRLF = `---\r\n${yamlData}\r\n---\r\n${content}`;
+
+        matter.clearCache();
+        const resultLF = matter(inputLF);
+        matter.clearCache();
+        const resultCRLF = matter(inputCRLF);
+
+        expect(resultLF.data).toEqual(resultCRLF.data);
+        expect(resultLF.content).toBe(resultCRLF.content);
+      },
+    );
   });
 }

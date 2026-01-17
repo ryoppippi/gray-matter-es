@@ -63,3 +63,119 @@ export function stringify(
 
   return buf + newline(str);
 }
+
+if (import.meta.vitest) {
+  const { fc, test } = await import("@fast-check/vitest");
+
+  describe("stringify", () => {
+    it("should stringify file object with data", () => {
+      const file = {
+        content: "hello world",
+        data: { title: "Test" },
+        excerpt: "",
+        orig: Buffer.from(""),
+        language: "yaml",
+        matter: "",
+        isEmpty: false,
+        stringify: () => "",
+      };
+      const result = stringify(file);
+      expect(result).toContain("---");
+      expect(result).toContain("title: Test");
+      expect(result).toContain("hello world");
+    });
+
+    it("should return string as-is when only string provided", () => {
+      expect(stringify("hello")).toBe("hello");
+    });
+
+    it("should throw for invalid input", () => {
+      expect(() => stringify(123 as unknown as string)).toThrow(TypeError);
+    });
+
+    it("should ensure trailing newline", () => {
+      const file = {
+        content: "no newline",
+        data: { key: "value" },
+        excerpt: "",
+        orig: Buffer.from(""),
+        language: "yaml",
+        matter: "",
+        isEmpty: false,
+        stringify: () => "",
+      };
+      const result = stringify(file);
+      expect(result.endsWith("\n")).toBe(true);
+    });
+
+    it("should not add front matter for empty data", () => {
+      const file = {
+        content: "content only",
+        data: {},
+        excerpt: "",
+        orig: Buffer.from(""),
+        language: "yaml",
+        matter: "",
+        isEmpty: false,
+        stringify: () => "",
+      };
+      const result = stringify(file, {});
+      expect(result).toBe("content only\n");
+    });
+
+    it("should include excerpt when present and not in content", () => {
+      const file = {
+        content: "main content",
+        data: { title: "Test" },
+        excerpt: "This is excerpt",
+        orig: Buffer.from(""),
+        language: "yaml",
+        matter: "",
+        isEmpty: false,
+        stringify: () => "",
+      };
+      const result = stringify(file);
+      expect(result).toContain("This is excerpt");
+    });
+
+    test.prop([
+      fc.record({
+        title: fc.string({ minLength: 1, maxLength: 50 }),
+        count: fc.integer({ min: 0, max: 1000 }),
+        enabled: fc.boolean(),
+      }),
+    ])("should always produce string ending with newline for any data", (data) => {
+      const file = {
+        content: "test content",
+        data,
+        excerpt: "",
+        orig: Buffer.from(""),
+        language: "yaml",
+        matter: "",
+        isEmpty: false,
+        stringify: () => "",
+      };
+      const result = stringify(file);
+      expect(result.endsWith("\n")).toBe(true);
+    });
+
+    test.prop([fc.string({ minLength: 0, maxLength: 100 })])(
+      "should handle any content string",
+      (content) => {
+        const file = {
+          content,
+          data: { key: "value" },
+          excerpt: "",
+          orig: Buffer.from(""),
+          language: "yaml",
+          matter: "",
+          isEmpty: false,
+          stringify: () => "",
+        };
+        const result = stringify(file);
+        expect(typeof result).toBe("string");
+        expect(result.endsWith("\n")).toBe(true);
+      },
+    );
+  });
+}

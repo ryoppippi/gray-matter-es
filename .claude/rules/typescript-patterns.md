@@ -116,3 +116,37 @@ const count = options.count || 0; // 0 becomes 0 (works by accident)
 // Exception: when you WANT to treat empty string as falsy
 const language = file.language || opts.language; // "" should fall back
 ```
+
+## Prefer `if-else` over Ternary for Return Statements
+
+When a function returns based on a condition, prefer explicit `if-else` with early returns over ternary operators for better code coverage:
+
+```typescript
+// Good - explicit branches, better coverage
+function toUint8Array(input: string | Uint8Array): Uint8Array {
+  if (isString(input)) {
+    return textEncoder.encode(input);
+  }
+  return input;
+}
+
+// Avoid - harder to measure coverage
+function toUint8Array(input: string | Uint8Array): Uint8Array {
+  return isString(input) ? textEncoder.encode(input) : input;
+}
+```
+
+However, ternary is acceptable for variable assignments to avoid `let`:
+
+```typescript
+// OK - ternary to keep const
+const delimiter = isString(opts.excerpt) ? opts.excerpt : (sep ?? opts.delimiters[0]);
+
+// Avoid - using let just to avoid ternary
+let delimiter: string;
+if (isString(opts.excerpt)) {
+  delimiter = opts.excerpt;
+} else {
+  delimiter = sep ?? opts.delimiters[0];
+}
+```

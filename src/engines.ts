@@ -1,6 +1,6 @@
 import { parse as yamlParse, stringify as yamlStringify } from "@std/yaml";
 import type { Engine, GrayMatterOptions } from "./types.ts";
-import { toRecord } from "./utils.ts";
+import { isString, toRecord } from "./utils.ts";
 
 /**
  * Built-in language names
@@ -16,7 +16,7 @@ const BUILTIN_LANGUAGES = ["yaml", "json"] as const satisfies readonly BuiltinLa
  * Check if value is a built-in language name
  */
 function isBuiltinLanguage(value: unknown): value is BuiltinLanguage {
-  return typeof value === "string" && BUILTIN_LANGUAGES.includes(value as BuiltinLanguage);
+  return isString(value) && BUILTIN_LANGUAGES.includes(value as BuiltinLanguage);
 }
 
 /**

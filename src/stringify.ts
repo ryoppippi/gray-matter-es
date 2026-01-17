@@ -1,7 +1,7 @@
 import { defaults } from "./defaults.ts";
 import { getEngine, toBuiltinLanguage } from "./engines.ts";
 import type { GrayMatterFile, GrayMatterOptions } from "./types.ts";
-import { isObject } from "./utils.ts";
+import { isObject, isString } from "./utils.ts";
 
 /**
  * Type guard for GrayMatterFile
@@ -29,7 +29,7 @@ export function stringify(
     if (isGrayMatterFile(file)) {
       data = file.data;
       options = {};
-    } else if (typeof file === "string") {
+    } else if (isString(file)) {
       return file;
     } else {
       throw new TypeError("expected file to be a string or object");
@@ -61,7 +61,7 @@ export function stringify(
     buf = newline(open) + newline(matter) + newline(close);
   }
 
-  if (typeof file.excerpt === "string" && file.excerpt !== "") {
+  if (isString(file.excerpt) && file.excerpt !== "") {
     if (str.indexOf(file.excerpt.trim()) === -1) {
       buf += newline(file.excerpt) + newline(close);
     }

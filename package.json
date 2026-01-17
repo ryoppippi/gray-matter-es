@@ -60,5 +60,8 @@
     "unplugin-unused": "catalog:dev",
     "vitest": "catalog:dev"
   },
+  "engines": {
+    "node": ">=20.19.6"
+  },
   "packageManager": "pnpm@10.28.0"
 }

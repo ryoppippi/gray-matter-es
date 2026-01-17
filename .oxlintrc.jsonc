@@ -97,6 +97,7 @@
     "import/no-duplicates": "error",
     "import/no-mutable-exports": "error",
     "import/no-named-default": "error",
+    "no-param-reassign": "error",
     "curly": ["error", "all"],
   },
 }

@@ -1,6 +1,6 @@
 {
   "name": "gray-matter-es",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "ES-only gray-matter",
   "keywords": [
     "esm",

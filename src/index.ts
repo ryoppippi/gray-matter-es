@@ -5,6 +5,7 @@ import { parse } from "./parse.ts";
 import { stringify as stringifyImpl } from "./stringify.ts";
 import { toFile } from "./to-file.ts";
 import type { GrayMatterFile, GrayMatterInput, GrayMatterOptions } from "./types.ts";
+import { isString } from "./utils.ts";
 
 export type {
   Engine,
@@ -171,8 +172,10 @@ function stringify(
   data?: Record<string, unknown>,
   options?: GrayMatterOptions,
 ): string {
-  const resolvedFile = typeof file === "string" ? matter(file, options) : file;
-  return stringifyImpl(resolvedFile, data, options);
+  if (isString(file)) {
+    return stringifyImpl(matter(file, options), data, options);
+  }
+  return stringifyImpl(file, data, options);
 }
 
 export { matter, stringify, test, language, clearCache, cache };

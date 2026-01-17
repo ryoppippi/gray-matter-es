@@ -2,6 +2,13 @@ const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
 
 /**
+ * Returns true if `val` is a string
+ */
+export function isString(val: unknown): val is string {
+  return typeof val === "string";
+}
+
+/**
  * Strip BOM (Byte Order Mark) from a string
  */
 function stripBom(str: string): string {
@@ -28,7 +35,10 @@ export function isObject(val: unknown): val is Record<string, unknown> {
  * Cast `input` to a Uint8Array
  */
 export function toUint8Array(input: string | Uint8Array): Uint8Array {
-  return typeof input === "string" ? textEncoder.encode(input) : input;
+  if (isString(input)) {
+    return textEncoder.encode(input);
+  }
+  return input;
 }
 
 /**
@@ -61,9 +71,14 @@ export function toRecord(val: unknown): Record<string, unknown> {
  * Get a string property from an object with a default value
  */
 export function getStringProp(obj: unknown, key: string, defaultValue = ""): string {
-  if (!isObject(obj)) return defaultValue;
+  if (!isObject(obj)) {
+    return defaultValue;
+  }
   const value = obj[key];
-  return typeof value === "string" ? value : defaultValue;
+  if (isString(value)) {
+    return value;
+  }
+  return defaultValue;
 }
 
 if (import.meta.vitest) {

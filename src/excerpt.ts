@@ -1,6 +1,6 @@
 import { defaults } from "./defaults.ts";
 import type { GrayMatterFile, GrayMatterOptions } from "./types.ts";
-import { getStringProp } from "./utils.ts";
+import { getStringProp, isString } from "./utils.ts";
 
 /**
  * Extract excerpt from file content
@@ -23,7 +23,7 @@ export function excerpt(file: GrayMatterFile, options?: GrayMatterOptions): Gray
     return file;
   }
 
-  const delimiter = typeof opts.excerpt === "string" ? opts.excerpt : (sep ?? opts.delimiters[0]);
+  const delimiter = isString(opts.excerpt) ? opts.excerpt : (sep ?? opts.delimiters[0]);
 
   // if enabled, get the excerpt defined after front-matter
   const idx = file.content.indexOf(delimiter);

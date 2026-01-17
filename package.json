@@ -48,12 +48,14 @@
     "format:knip": "knip --fix --no-exit-code",
     "prepack": "npm pkg delete scripts.preinstall && pnpm run build",
     "prerelease": "pnpm run lint && pnpm run build",
-    "release": "bumpp"
+    "release": "bumpp",
+    "coverage": "vitest run --coverage"
   },
   "devDependencies": {
     "@fast-check/vitest": "catalog:dev",
     "@std/yaml": "catalog:jsr",
     "@types/node": "catalog:dev",
+    "@vitest/coverage-v8": "catalog:dev",
     "bumpp": "catalog:release",
     "changelogithub": "catalog:release",
     "knip": "catalog:dev",

@@ -43,3 +43,13 @@ catalogs:
   jsr:
     "@std/yaml": jsr:@std/yaml@^1
 ```
+
+## Version Check
+
+When adding new dependencies, **always verify the latest version** using:
+
+```bash
+npm view <package-name> version
+```
+
+Do not assume or guess version numbers.

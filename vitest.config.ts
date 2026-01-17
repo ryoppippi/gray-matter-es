@@ -5,5 +5,11 @@ export default defineConfig({
     watch: false,
     includeSource: ["src/**/*.{js,ts}"],
     globals: true,
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "json", "json-summary", "html"],
+      include: ["src/**/*.ts"],
+      exclude: ["**/index.ts", "**/types.ts"],
+    },
   },
 });

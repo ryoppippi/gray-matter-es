@@ -1,5 +1,9 @@
 # CLAUDE.md
 
+## Language
+
+Use **US English** spelling in this project (e.g., "initialize", "serialize", "color"). This is enforced by `typos` in pre-commit hooks.
+
 ## Project Overview
 
 This is an ESM-only port of [gray-matter](https://github.com/jonschlinkert/gray-matter) - a library for parsing front-matter from strings or files.

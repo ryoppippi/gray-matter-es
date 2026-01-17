@@ -70,13 +70,6 @@
                 enable = true;
                 package = config.treefmt.build.wrapper;
               };
-              typecheck = {
-                enable = true;
-                name = "typecheck";
-                entry = "pnpm run typecheck";
-                language = "system";
-                pass_filenames = false;
-              };
               vitest = {
                 enable = true;
                 name = "vitest";

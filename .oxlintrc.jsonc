@@ -99,14 +99,4 @@
     "import/no-named-default": "error",
     "curly": ["error", "all"],
   },
-  "overrides": [
-    {
-      "files": ["**/*.test.ts", "**/*.spec.ts", "tests/**/*.ts"],
-      "rules": {
-        "no-console": "off",
-        "typescript/no-explicit-any": "warn",
-        "typescript/no-floating-promises": "warn",
-      },
-    },
-  ],
 }

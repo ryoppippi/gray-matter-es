@@ -100,6 +100,13 @@ if (import.meta.vitest) {
       expect(result.stringify).toBeTypeOf("function");
     });
 
+    it("should update language in stringify when options.language provided", () => {
+      const result = toFile("content");
+      result.data = { title: "Test" };
+      result.stringify({ extra: "data" }, { language: "json" });
+      expect(result.language).toBe("json");
+    });
+
     it("should initialize data to empty object if not provided", () => {
       const result = toFile({ content: "test" });
       expect(result.data).toEqual({});

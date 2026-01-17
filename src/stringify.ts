@@ -99,6 +99,42 @@ if (import.meta.vitest) {
       expect(() => stringify(123 as unknown as string)).toThrow(TypeError);
     });
 
+    it("should throw when file is not GrayMatterFile with data/options", () => {
+      expect(() => stringify("not a file" as unknown as GrayMatterFile, { key: "value" })).toThrow(
+        TypeError,
+      );
+    });
+
+    it("should use opts.data when data is null", () => {
+      const file = {
+        content: "content",
+        data: {},
+        excerpt: "",
+        orig: new Uint8Array(),
+        language: "yaml",
+        matter: "",
+        isEmpty: false,
+        stringify: () => "",
+      };
+      const result = stringify(file, null, { data: { fromOpts: true } });
+      expect(result).toContain("fromOpts: true");
+    });
+
+    it("should return content only when data is null and opts.data is falsy", () => {
+      const file = {
+        content: "just content",
+        data: {},
+        excerpt: "",
+        orig: new Uint8Array(),
+        language: "yaml",
+        matter: "",
+        isEmpty: false,
+        stringify: () => "",
+      };
+      const result = stringify(file, null, {});
+      expect(result).toBe("just content");
+    });
+
     it("should ensure trailing newline", () => {
       const file = {
         content: "no newline",

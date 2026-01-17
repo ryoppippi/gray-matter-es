@@ -1,5 +1,6 @@
 import { parse as yamlParse, stringify as yamlStringify } from "@std/yaml";
 import type { Engine, GrayMatterOptions } from "./types.ts";
+import { toRecord } from "./utils.ts";
 
 /**
  * Built-in language names
@@ -7,15 +8,36 @@ import type { Engine, GrayMatterOptions } from "./types.ts";
 export type BuiltinLanguage = "yaml" | "json";
 
 /**
+ * Array of built-in language names for runtime validation
+ */
+const BUILTIN_LANGUAGES = ["yaml", "json"] as const satisfies readonly BuiltinLanguage[];
+
+/**
+ * Check if value is a built-in language name
+ */
+function isBuiltinLanguage(value: unknown): value is BuiltinLanguage {
+  return typeof value === "string" && BUILTIN_LANGUAGES.includes(value as BuiltinLanguage);
+}
+
+/**
+ * Assert that value is a built-in language, returning the default if not
+ */
+export function toBuiltinLanguage(
+  value: unknown,
+  defaultLang: BuiltinLanguage = "yaml",
+): BuiltinLanguage {
+  return isBuiltinLanguage(value) ? value : defaultLang;
+}
+
+/**
  * YAML engine using @std/yaml
  */
 const yaml = {
   parse: (str: string): Record<string, unknown> => {
-    const result = yamlParse(str);
-    return (result as Record<string, unknown>) ?? {};
+    return toRecord(yamlParse(str));
   },
   stringify: (data: Record<string, unknown>): string => {
-    return yamlStringify(data as Record<string, unknown>);
+    return yamlStringify(data);
   },
 } as const satisfies Engine;
 
@@ -24,7 +46,7 @@ const yaml = {
  */
 const json = {
   parse: (str: string): Record<string, unknown> => {
-    return JSON.parse(str) as Record<string, unknown>;
+    return toRecord(JSON.parse(str));
   },
   stringify: (
     data: Record<string, unknown>,
@@ -153,6 +175,43 @@ if (import.meta.vitest) {
 
     it("should return json engine", () => {
       expect(getEngine("json")).toBe(json);
+    });
+  });
+
+  describe("isBuiltinLanguage", () => {
+    it("should return true for yaml", () => {
+      expect(isBuiltinLanguage("yaml")).toBe(true);
+    });
+
+    it("should return true for json", () => {
+      expect(isBuiltinLanguage("json")).toBe(true);
+    });
+
+    it("should return false for unknown languages", () => {
+      expect(isBuiltinLanguage("toml")).toBe(false);
+      expect(isBuiltinLanguage("")).toBe(false);
+    });
+
+    it("should return false for non-strings", () => {
+      expect(isBuiltinLanguage(null)).toBe(false);
+      expect(isBuiltinLanguage(undefined)).toBe(false);
+      expect(isBuiltinLanguage(123)).toBe(false);
+    });
+  });
+
+  describe("toBuiltinLanguage", () => {
+    it("should return valid language as-is", () => {
+      expect(toBuiltinLanguage("yaml")).toBe("yaml");
+      expect(toBuiltinLanguage("json")).toBe("json");
+    });
+
+    it("should return default for invalid language", () => {
+      expect(toBuiltinLanguage("toml")).toBe("yaml");
+      expect(toBuiltinLanguage("")).toBe("yaml");
+    });
+
+    it("should use custom default", () => {
+      expect(toBuiltinLanguage("toml", "json")).toBe("json");
     });
   });
 }

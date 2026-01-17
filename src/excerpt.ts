@@ -1,5 +1,6 @@
 import { defaults } from "./defaults.ts";
 import type { GrayMatterFile, GrayMatterOptions } from "./types.ts";
+import { getStringProp } from "./utils.ts";
 
 /**
  * Extract excerpt from file content
@@ -15,8 +16,8 @@ export function excerpt(file: GrayMatterFile, options?: GrayMatterOptions): Gray
     return file;
   }
 
-  const sep =
-    (file.data as { excerpt_separator?: string }).excerpt_separator ?? opts.excerpt_separator;
+  const dataSep = getStringProp(file.data, "excerpt_separator");
+  const sep = dataSep !== "" ? dataSep : opts.excerpt_separator;
 
   if (sep == null && (opts.excerpt === false || opts.excerpt == null)) {
     return file;

@@ -1,7 +1,14 @@
 import { defaults } from "./defaults.ts";
-import { type BuiltinLanguage, getEngine } from "./engines.ts";
+import { getEngine, toBuiltinLanguage } from "./engines.ts";
 import type { GrayMatterFile, GrayMatterOptions } from "./types.ts";
 import { isObject } from "./utils.ts";
+
+/**
+ * Type guard for GrayMatterFile
+ */
+function isGrayMatterFile(val: unknown): val is GrayMatterFile {
+  return isObject(val) && "content" in val && "data" in val;
+}
 
 /**
  * Ensure string ends with newline
@@ -19,8 +26,8 @@ export function stringify(
   options?: GrayMatterOptions,
 ): string {
   if (data == null && options == null) {
-    if (isObject(file)) {
-      data = (file as GrayMatterFile).data;
+    if (isGrayMatterFile(file)) {
+      data = file.data;
       options = {};
     } else if (typeof file === "string") {
       return file;
@@ -29,8 +36,11 @@ export function stringify(
     }
   }
 
-  const fileObj = file as GrayMatterFile;
-  const str = fileObj.content;
+  if (!isGrayMatterFile(file)) {
+    throw new TypeError("expected file to be a string or object");
+  }
+
+  const str = file.content;
   const opts = defaults(options);
 
   if (data == null) {
@@ -38,10 +48,10 @@ export function stringify(
     data = opts.data;
   }
 
-  const language = (fileObj.language || opts.language) as BuiltinLanguage;
+  const language = toBuiltinLanguage(file.language || opts.language);
   const engine = getEngine(language);
 
-  data = { ...fileObj.data, ...data };
+  data = { ...file.data, ...data };
   const open = opts.delimiters[0];
   const close = opts.delimiters[1];
   const matter = engine.stringify!(data).trim();
@@ -51,9 +61,9 @@ export function stringify(
     buf = newline(open) + newline(matter) + newline(close);
   }
 
-  if (typeof fileObj.excerpt === "string" && fileObj.excerpt !== "") {
-    if (str.indexOf(fileObj.excerpt.trim()) === -1) {
-      buf += newline(fileObj.excerpt) + newline(close);
+  if (typeof file.excerpt === "string" && file.excerpt !== "") {
+    if (str.indexOf(file.excerpt.trim()) === -1) {
+      buf += newline(file.excerpt) + newline(close);
     }
   }
 

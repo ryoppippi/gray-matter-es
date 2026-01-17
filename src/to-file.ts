@@ -1,18 +1,44 @@
 import type { GrayMatterFile, GrayMatterInput, GrayMatterOptions } from "./types.ts";
-import { isObject, toBuffer, toString } from "./utils.ts";
+import { getStringProp, isObject, toBuffer, toString } from "./utils.ts";
 import { stringify } from "./stringify.ts";
+
+/**
+ * Internal input shape after normalization
+ */
+interface NormalizedInput {
+  content: string | Buffer;
+  data?: unknown;
+  language?: string;
+  matter?: string;
+}
+
+/**
+ * Normalize input to a consistent shape
+ */
+function normalizeInput(input: GrayMatterInput): NormalizedInput {
+  if (isObject(input)) {
+    return {
+      content: getStringProp(input, "content"),
+      data: input.data,
+      language: getStringProp(input, "language"),
+      matter: getStringProp(input, "matter"),
+    };
+  }
+  // string or Buffer
+  return { content: input };
+}
 
 /**
  * Normalize the given value to ensure an object is returned
  * with the expected properties.
  */
 export function toFile(input: GrayMatterInput): GrayMatterFile {
-  const inputObj = isObject(input) ? input : { content: input as string };
-  const data = isObject(inputObj.data) ? inputObj.data : {};
-  const content = toString((inputObj as { content?: string }).content ?? "");
-  const language = (inputObj as { language?: string }).language ?? "";
-  const matter = (inputObj as { matter?: string }).matter ?? "";
-  const orig = toBuffer((inputObj as { content?: string }).content ?? "");
+  const normalized = normalizeInput(input);
+  const data = isObject(normalized.data) ? normalized.data : {};
+  const content = toString(normalized.content ?? "");
+  const language = normalized.language ?? "";
+  const matter = normalized.matter ?? "";
+  const orig = toBuffer(normalized.content ?? "");
 
   const file: GrayMatterFile = {
     data,

@@ -46,8 +46,61 @@ export function arrayify<T>(val: T | T[] | undefined | null): T[] {
   return val ? (Array.isArray(val) ? val : [val]) : [];
 }
 
+/**
+ * Asserts that `val` is a plain object and returns it typed as Record<string, unknown>
+ * If `val` is not a plain object, returns an empty object
+ */
+export function toRecord(val: unknown): Record<string, unknown> {
+  return isObject(val) ? val : {};
+}
+
+/**
+ * Get a string property from an object with a default value
+ */
+export function getStringProp(obj: unknown, key: string, defaultValue = ""): string {
+  if (!isObject(obj)) return defaultValue;
+  const value = obj[key];
+  return typeof value === "string" ? value : defaultValue;
+}
+
 if (import.meta.vitest) {
   describe("utils", () => {
+    describe("toRecord", () => {
+      it("should return object as-is", () => {
+        const obj = { a: 1, b: "hello" };
+        expect(toRecord(obj)).toBe(obj);
+      });
+
+      it("should return empty object for non-objects", () => {
+        expect(toRecord(null)).toEqual({});
+        expect(toRecord(undefined)).toEqual({});
+        expect(toRecord("string")).toEqual({});
+        expect(toRecord(123)).toEqual({});
+        expect(toRecord([])).toEqual({});
+      });
+    });
+
+    describe("getStringProp", () => {
+      it("should return string property value", () => {
+        expect(getStringProp({ name: "test" }, "name")).toBe("test");
+      });
+
+      it("should return default for missing property", () => {
+        expect(getStringProp({ other: "value" }, "name")).toBe("");
+        expect(getStringProp({ other: "value" }, "name", "default")).toBe("default");
+      });
+
+      it("should return default for non-string property", () => {
+        expect(getStringProp({ count: 42 }, "count")).toBe("");
+        expect(getStringProp({ flag: true }, "flag")).toBe("");
+      });
+
+      it("should return default for non-objects", () => {
+        expect(getStringProp(null, "name")).toBe("");
+        expect(getStringProp("string", "name")).toBe("");
+      });
+    });
+
     describe("stripBom", () => {
       it("should strip BOM from string", () => {
         expect(stripBom("\uFEFFhello")).toBe("hello");

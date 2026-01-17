@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { defaults } from "./defaults.ts";
-import { type BuiltinLanguage } from "./engines.ts";
+import { toBuiltinLanguage } from "./engines.ts";
 import { excerpt } from "./excerpt.ts";
 import { parse } from "./parse.ts";
 import { stringify } from "./stringify.ts";
@@ -116,7 +116,7 @@ function parseMatter(file: GrayMatterFile, options?: GrayMatterOptions): GrayMat
     file.data = {};
   } else {
     // create file.data by parsing the raw file.matter block
-    file.data = parse(file.language as BuiltinLanguage, file.matter);
+    file.data = parse(toBuiltinLanguage(file.language), file.matter);
   }
 
   // update file.content

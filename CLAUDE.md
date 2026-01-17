@@ -34,6 +34,30 @@ if (import.meta.vitest) {
 - `pnpm run build` - Build with tsdown
 - `pnpm run lint` - Lint with oxlint
 
+## TypeScript Patterns
+
+### Use `as const satisfies` for Object/Function Definitions
+
+When defining objects or functions that should conform to a type while preserving literal types, use `as const satisfies`:
+
+```typescript
+// Good - preserves literal types while ensuring type conformance
+const engines = {
+  yaml,
+  json,
+  javascript,
+} as const satisfies Engines;
+
+const ALIASES = {
+  js: "javascript",
+  yaml: "yaml",
+  yml: "yaml",
+} as const satisfies Record<string, BuiltinLanguage>;
+
+// Avoid - loses literal type information
+const engines: Engines = { yaml, json, javascript };
+```
+
 ## Dependency Management
 
 All dependencies MUST be managed via pnpm catalog in `pnpm-workspace.yaml`:

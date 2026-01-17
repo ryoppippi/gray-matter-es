@@ -4,36 +4,36 @@ import type { Engine, Engines, GrayMatterOptions } from "./types.ts";
 /**
  * YAML engine using @std/yaml
  */
-const yaml: Engine = {
-  parse: (str: string, _options?: GrayMatterOptions) => {
+const yaml = {
+  parse: (str: string, _options?: GrayMatterOptions): Record<string, unknown> => {
     const result = yamlParse(str);
     return (result as Record<string, unknown>) ?? {};
   },
-  stringify: (data: Record<string, unknown>, _options?: GrayMatterOptions) => {
+  stringify: (data: Record<string, unknown>, _options?: GrayMatterOptions): string => {
     return yamlStringify(data as Record<string, unknown>);
   },
-};
+} as const satisfies Engine;
 
 /**
  * JSON engine
  */
-const json: Engine = {
-  parse: (str: string, _options?: GrayMatterOptions) => {
+const json = {
+  parse: (str: string, _options?: GrayMatterOptions): Record<string, unknown> => {
     return JSON.parse(str) as Record<string, unknown>;
   },
   stringify: (
     data: Record<string, unknown>,
     options?: GrayMatterOptions & { replacer?: null; space?: number },
-  ) => {
+  ): string => {
     const opts = { replacer: null, space: 2, ...options };
     return JSON.stringify(data, opts.replacer, opts.space);
   },
-};
+} as const satisfies Engine;
 
 /**
  * JavaScript engine (uses eval)
  */
-const javascript: Engine = {
+const javascript = {
   parse: function parse(
     str: string,
     _options?: GrayMatterOptions,
@@ -53,16 +53,16 @@ const javascript: Engine = {
       throw new SyntaxError(String(err));
     }
   },
-  stringify: () => {
+  stringify: (): never => {
     throw new Error("stringifying JavaScript is not supported");
   },
-};
+} as const satisfies Engine;
 
 /**
  * Default engines
  */
-export const engines: Engines = {
+export const engines = {
   yaml,
   json,
   javascript,
-};
+} as const satisfies Engines;

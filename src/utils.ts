@@ -3,7 +3,7 @@ import { Buffer } from "node:buffer";
 /**
  * Strip BOM (Byte Order Mark) from a string
  */
-export function stripBom(str: string): string {
+function stripBom(str: string): string {
   return str.charCodeAt(0) === 0xfeff ? str.slice(1) : str;
 }
 
@@ -22,7 +22,7 @@ export function define<T extends object, K extends PropertyKey, V>(obj: T, key: 
 /**
  * Returns true if `val` is a Buffer
  */
-export function isBuffer(val: unknown): val is Buffer {
+function isBuffer(val: unknown): val is Buffer {
   return Buffer.isBuffer(val);
 }
 

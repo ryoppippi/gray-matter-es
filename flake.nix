@@ -85,6 +85,13 @@
                 language = "system";
                 pass_filenames = false;
               };
+              knip = {
+                enable = true;
+                name = "knip";
+                entry = "pnpm run lint:knip";
+                language = "system";
+                pass_filenames = false;
+              };
             };
           };
 

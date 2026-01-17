@@ -189,7 +189,7 @@ function matterTest(str: string, options?: GrayMatterOptions): boolean {
 /**
  * The matter function with all static methods
  */
-export const matter: MatterFunction = Object.assign(matterImpl, {
+const matter: MatterFunction = Object.assign(matterImpl, {
   /**
    * Stringify an object to YAML or the specified language, and
    * append it to the given string.

@@ -1,5 +1,5 @@
 {
-  "name": "grray-matter-es",
+  "name": "gray-matter-es",
   "version": "0.0.0",
   "description": "ES-only gray-matter",
   "keywords": [
@@ -8,15 +8,15 @@
     "gray-matter",
     "yaml"
   ],
-  "homepage": "https://github.com/ryoppippi/grray-matter-es#readme",
+  "homepage": "https://github.com/ryoppippi/gray-matter-es#readme",
   "bugs": {
-    "url": "https://github.com/ryoppippi/grray-matter-es/issues"
+    "url": "https://github.com/ryoppippi/gray-matter-es/issues"
   },
   "license": "MIT",
   "author": "ryoppippi",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ryoppippi/grray-matter-es.git"
+    "url": "git+https://github.com/ryoppippi/gray-matter-es.git"
   },
   "files": [
     "dist",
@@ -47,7 +47,6 @@
     "format:oxfmt": "oxfmt --no-error-on-unmatched-pattern .",
     "format:knip": "knip --fix --no-exit-code",
     "prepack": "npm pkg delete scripts.preinstall && pnpm run build",
-    "preinstall": "npx only-allow pnpm",
     "prerelease": "pnpm run lint && pnpm run build",
     "release": "bumpp"
   },

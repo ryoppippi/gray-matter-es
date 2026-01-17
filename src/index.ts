@@ -35,7 +35,7 @@ const cache = new Map<string, GrayMatterFile>();
  *
  * @example
  * ```ts
- * import matter from 'grray-matter-es';
+ * import matter from 'gray-matter-es';
  * console.log(matter('---\ntitle: Home\n---\nOther stuff'));
  * //=> { data: { title: 'Home'}, content: 'Other stuff' }
  * ```

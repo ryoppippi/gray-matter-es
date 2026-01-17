@@ -1,4 +1,4 @@
-# grray-matter-es
+# gray-matter-es
 
 ESM-only [gray-matter](https://github.com/jonschlinkert/gray-matter) implementation.
 
@@ -12,15 +12,15 @@ ESM-only [gray-matter](https://github.com/jonschlinkert/gray-matter) implementat
 ## Installation
 
 ```bash
-npm install grray-matter-es
+npm install gray-matter-es
 # or
-pnpm add grray-matter-es
+pnpm add gray-matter-es
 ```
 
 ## Usage
 
 ```typescript
-import matter from "grray-matter-es";
+import matter from "gray-matter-es";
 
 // Parse front matter
 const file = matter("---\ntitle: Hello\n---\nThis is content");

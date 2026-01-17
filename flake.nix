@@ -114,7 +114,7 @@
             ];
 
             shellHook = ''
-              echo "grray-matter-es dev shell"
+              echo "gray-matter-es dev shell"
 
               # Install dependencies only if node_modules/.pnpm/lock.yaml is older than pnpm-lock.yaml
               if [ ! -f node_modules/.pnpm/lock.yaml ] || [ pnpm-lock.yaml -nt node_modules/.pnpm/lock.yaml ]; then

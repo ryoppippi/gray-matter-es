@@ -26,9 +26,8 @@ export type {
 
 /**
  * Cache for parsed results
- * Using Object.create(null) to avoid prototype pollution
  */
-const cache: Record<string, GrayMatterFile> = Object.create(null);
+const cache = new Map<string, GrayMatterFile>();
 
 /**
  * Takes a string or object with `content` property, extracts
@@ -71,7 +70,7 @@ function matterImpl(input: GrayMatterInput, options?: GrayMatterOptions): GrayMa
   }
 
   let file = toFile(input);
-  const cached = cache[file.content];
+  const cached = cache.get(file.content);
 
   if (!options) {
     if (cached) {
@@ -81,7 +80,7 @@ function matterImpl(input: GrayMatterInput, options?: GrayMatterOptions): GrayMa
     }
 
     // only cache if there are no options passed
-    cache[file.content] = file;
+    cache.set(file.content, file);
   }
 
   return parseMatter(file, options);
@@ -234,9 +233,7 @@ const matter: MatterFunction = Object.assign(matterImpl, {
    * Clear the cache
    */
   clearCache: (): void => {
-    for (const key of Object.keys(cache)) {
-      delete cache[key];
-    }
+    cache.clear();
   },
 
   /**

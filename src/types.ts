@@ -91,5 +91,5 @@ export interface MatterFunction {
   language: (str: string, options?: GrayMatterOptions) => { raw: string; name: string };
   engines: Engines;
   clearCache: () => void;
-  cache: Record<string, GrayMatterFile>;
+  cache: Map<string, GrayMatterFile>;
 }

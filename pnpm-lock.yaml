@@ -9,9 +9,6 @@ catalogs:
     '@fast-check/vitest':
       specifier: ^0.2.0
       version: 0.2.4
-    '@types/node':
-      specifier: ^24.0.3
-      version: 24.10.9
     '@vitest/coverage-v8':
       specifier: ^4.0.17
       version: 4.0.17
@@ -52,9 +49,6 @@ importers:
       '@std/yaml':
         specifier: catalog:jsr
         version: '@jsr/std__yaml@1.0.10'
-      '@types/node':
-        specifier: catalog:dev
-        version: 24.10.9
       '@vitest/coverage-v8':
         specifier: catalog:dev
         version: 4.0.17(vitest@4.0.17(@types/node@24.10.9)(jiti@2.6.1)(yaml@2.8.2))

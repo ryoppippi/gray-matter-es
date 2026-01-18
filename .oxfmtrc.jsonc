@@ -1,5 +1,5 @@
 {
-  "$schema": "./node_modules/@anthropic-ai/claude-code/oxfmt_schema.json",
+  "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxfmt/configuration_schema.json",
   "indentation": {
     "style": "tab",
     "width": 2,

@@ -239,13 +239,10 @@ nix develop
 # Run tests
 pnpm run test
 
-# Type check with tsgo
-pnpm run typecheck
-
 # Build
 pnpm run build
 
-# Lint
+# Lint & typecheck
 pnpm run lint
 ```
 

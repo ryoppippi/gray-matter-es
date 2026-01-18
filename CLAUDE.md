@@ -18,9 +18,8 @@ This is an ESM-only port of [gray-matter](https://github.com/jonschlinkert/gray-
 ## Commands
 
 - `pnpm run test` - Run tests
-- `pnpm run typecheck` - Type check with tsgo
 - `pnpm run build` - Build with tsdown
-- `pnpm run lint` - Lint with oxlint
+- `pnpm run lint` - Lint with oxlint(including typecheck)
 
 ## Development Environment
 

@@ -67,7 +67,8 @@ export function getEngine(language: BuiltinLanguage): Engine {
     case "json":
       return json;
     default:
-      throw new Error(`Unknown language: ${language satisfies never}`);
+      language satisfies never;
+      throw new Error(`Unknown language: ${language as unknown as string}`);
   }
 }
 

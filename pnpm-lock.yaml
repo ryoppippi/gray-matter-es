@@ -7,8 +7,8 @@ settings:
 catalogs:
   dev:
     '@fast-check/vitest':
-      specifier: ^0.2.0
-      version: 0.2.4
+      specifier: ^0.5.0
+      version: 0.5.0
     '@vitest/coverage-v8':
       specifier: ^4.0.17
       version: 4.0.17
@@ -45,7 +45,7 @@ importers:
     devDependencies:
       '@fast-check/vitest':
         specifier: catalog:dev
-        version: 0.2.4(vitest@4.0.17(@types/node@24.10.9)(jiti@2.6.1)(yaml@2.8.2))
+        version: 0.5.0(vitest@4.0.17(@types/node@24.10.9)(jiti@2.6.1)(yaml@2.8.2))
       '@std/yaml':
         specifier: catalog:jsr
         version: '@jsr/std__yaml@1.0.10'
@@ -266,10 +266,10 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@fast-check/vitest@0.2.4':
-    resolution: {integrity: sha512-Ilcr+JAIPhb1s6FRm4qoglQYSGXXrS+zAupZeNuWAA3qHVGDA1d1Gb84Hb/+otL3GzVZjFJESg5/1SfIvrgssA==}
+  '@fast-check/vitest@0.5.0':
+    resolution: {integrity: sha512-Kgbj2smuq1P4OhGKuPATs5i2fAxNmGbJ/zSmTrzWhQSLUrHREbKWgv9WGbNUOXcx77q6joLVMmTygyXuwP2Bog==}
     peerDependencies:
-      vitest: ^1 || ^2 || ^3 || ^4
+      vitest: ^4.1.0 || ^5.0.0
 
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
@@ -1744,7 +1744,7 @@ snapshots:
   '@esbuild/win32-x64@0.27.2':
     optional: true
 
-  '@fast-check/vitest@0.2.4(vitest@4.0.17(@types/node@24.10.9)(jiti@2.6.1)(yaml@2.8.2))':
+  '@fast-check/vitest@0.5.0(vitest@4.0.17(@types/node@24.10.9)(jiti@2.6.1)(yaml@2.8.2))':
     dependencies:
       fast-check: 4.5.3
       vitest: 4.0.17(@types/node@24.10.9)(jiti@2.6.1)(yaml@2.8.2)

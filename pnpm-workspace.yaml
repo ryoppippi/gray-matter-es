@@ -2,7 +2,7 @@ catalogMode: strict
 
 catalogs:
   dev:
-    "@fast-check/vitest": ^0.2.0
+    "@fast-check/vitest": ^0.5.0
     "@vitest/coverage-v8": ^4.0.17
     knip: ^5.81.0
     publint: ^0.3.24

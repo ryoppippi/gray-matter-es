@@ -22,8 +22,8 @@ catalogs:
       specifier: ^0.23.0
       version: 0.23.0
     unplugin-unused:
-      specifier: ^0.5.0
-      version: 0.5.6
+      specifier: ^0.6.0
+      version: 0.6.0
     vitest:
       specifier: ^4.0.15
       version: 4.0.17
@@ -66,10 +66,10 @@ importers:
         version: 0.3.25
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(oxc-resolver@11.24.2)(publint@0.3.25)(typescript@5.9.3)(unplugin-unused@0.5.6)(unrun@0.2.25(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2))
+        version: 0.23.0(oxc-resolver@11.24.2)(publint@0.3.25)(typescript@5.9.3)(unplugin-unused@0.6.0(esbuild@0.27.2)(rolldown@1.2.11)(rollup@4.55.1)(vite@7.3.1(@types/node@24.10.9)(jiti@2.6.1)(yaml@2.8.2)))(unrun@0.2.25(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2))
       unplugin-unused:
         specifier: catalog:dev
-        version: 0.5.6
+        version: 0.6.0(esbuild@0.27.2)(rolldown@1.2.11)(rollup@4.55.1)(vite@7.3.1(@types/node@24.10.9)(jiti@2.6.1)(yaml@2.8.2))
       vitest:
         specifier: catalog:dev
         version: 4.0.17(@types/node@24.10.9)(jiti@2.6.1)(yaml@2.8.2)
@@ -1293,6 +1293,9 @@ packages:
     resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
     hasBin: true
 
+  js-tokens@10.0.0:
+    resolution: {integrity: sha512-lM/UBzQmfJRo9ABXbPWemivdCW8V2G8FHaHdypQaIy523snUjog0W71ayWXTjiR+ixeMyVHN2XcpnTd/liPg/Q==}
+
   js-tokens@9.0.1:
     resolution: {integrity: sha512-mxa9E9ITFOt0ban3j6L5MpjwegGz6lBQmM1IJkWeBZGcMxto50+eWdjC/52xDbS2vy0k7vIMK0Fe2wfL9OQSpQ==}
 
@@ -1673,13 +1676,45 @@ packages:
     resolution: {integrity: sha512-+QBBXBCvifc56fsbuxZQ6Sic3wqqc3WWaqxs58gvJrcOuN83HGTCwz3oS5phzU9LthRNE9VrJCFCLUgHeeFnfA==}
     engines: {node: '>=18'}
 
-  unplugin-unused@0.5.6:
-    resolution: {integrity: sha512-nuMhConeGhmYRFVvO3ZEJtAo6GrM09UqTJrOjKnTSkyr9zRjjkqN1M+mPZhYMN19+WHBR+JuNmq/gLo/ZajfdQ==}
-    engines: {node: '>=20.19.0'}
+  unplugin-unused@0.6.0:
+    resolution: {integrity: sha512-ov+8yoEs5lyCjK7AqSUmpLuyEhtHwKtNtc1PrpwJVCNQjv+Dins4+7e1+ej57yo8lfiW/zOr9FAEmNmjgU+hFQ==}
+    engines: {node: ^22.18.0 || ^24.11.0 || >=26.0.0}
 
-  unplugin@2.3.11:
-    resolution: {integrity: sha512-5uKD0nqiYVzlmCRs01Fhs2BdkEgBS3SAVP6ndrBsuK42iC2+JHyxM05Rm9G8+5mkmRtzMZGY8Ct5+mliZxU/Ww==}
-    engines: {node: '>=18.12.0'}
+  unplugin@3.4.0:
+    resolution: {integrity: sha512-9skdIFlCsPdFV7wUfZxNsFInlW+7nJmGu2gkTu0OUhF56aXGsHab9x52/QhdJ4lC7ZDPWTxbiC4ANqVlsuaW3w==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    peerDependencies:
+      '@farmfe/core': '*'
+      '@rsbuild/core': '*'
+      '@rspack/core': '*'
+      bun-types-no-globals: '*'
+      esbuild: '*'
+      rolldown: '*'
+      rollup: '*'
+      unloader: '*'
+      vite: '*'
+      webpack: '*'
+    peerDependenciesMeta:
+      '@farmfe/core':
+        optional: true
+      '@rsbuild/core':
+        optional: true
+      '@rspack/core':
+        optional: true
+      bun-types-no-globals:
+        optional: true
+      esbuild:
+        optional: true
+      rolldown:
+        optional: true
+      rollup:
+        optional: true
+      unloader:
+        optional: true
+      vite:
+        optional: true
+      webpack:
+        optional: true
 
   unrun@0.2.25:
     resolution: {integrity: sha512-ZOr5uQL+JlcUT8hZsQbtuUgb1zzcFx3juhXyLSsciaWa3DW1ldMY9r4KSF3+k/LR1Evj2ggAZo1usK4/knBjMQ==}
@@ -2729,6 +2764,8 @@ snapshots:
 
   jiti@2.6.1: {}
 
+  js-tokens@10.0.0: {}
+
   js-tokens@9.0.1: {}
 
   jsonc-parser@3.3.1: {}
@@ -3096,7 +3133,7 @@ snapshots:
 
   tree-kill@1.2.2: {}
 
-  tsdown@0.23.0(oxc-resolver@11.24.2)(publint@0.3.25)(typescript@5.9.3)(unplugin-unused@0.5.6)(unrun@0.2.25(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)):
+  tsdown@0.23.0(oxc-resolver@11.24.2)(publint@0.3.25)(typescript@5.9.3)(unplugin-unused@0.6.0(esbuild@0.27.2)(rolldown@1.2.11)(rollup@4.55.1)(vite@7.3.1(@types/node@24.10.9)(jiti@2.6.1)(yaml@2.8.2)))(unrun@0.2.25(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)):
     dependencies:
       cac: 7.0.0
       defu: 6.1.7
@@ -3115,7 +3152,7 @@ snapshots:
     optionalDependencies:
       publint: 0.3.25
       typescript: 5.9.3
-      unplugin-unused: 0.5.6
+      unplugin-unused: 0.6.0(esbuild@0.27.2)(rolldown@1.2.11)(rollup@4.55.1)(vite@7.3.1(@types/node@24.10.9)(jiti@2.6.1)(yaml@2.8.2))
       unrun: 0.2.25(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)
     transitivePeerDependencies:
       - '@typescript/native-preview'
@@ -3142,19 +3179,34 @@ snapshots:
 
   unicorn-magic@0.3.0: {}
 
-  unplugin-unused@0.5.6:
+  unplugin-unused@0.6.0(esbuild@0.27.2)(rolldown@1.2.11)(rollup@4.55.1)(vite@7.3.1(@types/node@24.10.9)(jiti@2.6.1)(yaml@2.8.2)):
     dependencies:
       empathic: 2.1.0
       escape-string-regexp: 5.0.0
-      js-tokens: 9.0.1
-      unplugin: 2.3.11
+      js-tokens: 10.0.0
+      unplugin: 3.4.0(esbuild@0.27.2)(rolldown@1.2.11)(rollup@4.55.1)(vite@7.3.1(@types/node@24.10.9)(jiti@2.6.1)(yaml@2.8.2))
+    transitivePeerDependencies:
+      - '@farmfe/core'
+      - '@rsbuild/core'
+      - '@rspack/core'
+      - bun-types-no-globals
+      - esbuild
+      - rolldown
+      - rollup
+      - unloader
+      - vite
+      - webpack
 
-  unplugin@2.3.11:
+  unplugin@3.4.0(esbuild@0.27.2)(rolldown@1.2.11)(rollup@4.55.1)(vite@7.3.1(@types/node@24.10.9)(jiti@2.6.1)(yaml@2.8.2)):
     dependencies:
       '@jridgewell/remapping': 2.3.5
-      acorn: 8.15.0
       picomatch: 4.0.7
       webpack-virtual-modules: 0.6.2
+    optionalDependencies:
+      esbuild: 0.27.2
+      rolldown: 1.2.11
+      rollup: 4.55.1
+      vite: 7.3.1(@types/node@24.10.9)(jiti@2.6.1)(yaml@2.8.2)
 
   unrun@0.2.25(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2):
     dependencies:

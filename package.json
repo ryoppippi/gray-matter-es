@@ -63,7 +63,7 @@
     "vitest": "catalog:dev"
   },
   "engines": {
-    "node": ">=20.19.6"
+    "node": ">=20.20.2"
   },
   "packageManager": "pnpm@10.28.0"
 }

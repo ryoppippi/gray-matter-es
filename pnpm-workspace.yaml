@@ -3,12 +3,12 @@ catalogMode: strict
 catalogs:
   dev:
     "@fast-check/vitest": ^0.5.0
-    "@vitest/coverage-v8": ^4.0.17
+    "@vitest/coverage-v8": ^4.1.12
     knip: ^5.88.1
     publint: ^0.3.25
     tsdown: ^0.23.4
     unplugin-unused: ^0.6.0
-    vitest: ^4.0.15
+    vitest: ^4.1.12
   jsr:
     "@std/yaml": jsr:@std/yaml@^1
   release:
